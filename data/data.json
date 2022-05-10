@@ -1,16 +1,6 @@
 {
   "items": [
     {
-      "id": 1,
-      "checked": false,
-      "item": "Milk"
-    },
-    {
-      "id": 2,
-      "checked": false,
-      "item": "Pizza"
-    },
-    {
       "id": 3,
       "checked": false,
       "item": "Bread"
@@ -19,6 +9,26 @@
       "id": 4,
       "checked": false,
       "item": "Cookies"
+    },
+    {
+      "id": 5,
+      "checked": false,
+      "item": "Almond"
+    },
+    {
+      "id": 6,
+      "checked": false,
+      "item": "Sugar"
+    },
+    {
+      "id": 7,
+      "checked": false,
+      "item": "Beef"
+    },
+    {
+      "id": 8,
+      "checked": false,
+      "item": "Milk"
     }
   ]
 }

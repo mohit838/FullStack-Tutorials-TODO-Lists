@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import './App.css';
 import AddItem from './components/AddFrom';
+import apiRequest from './components/apiRequest';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import Lesson from './components/Lesson';
 import SearchItems from './components/SearchItems';
 
 function App() {
-  const APP_URL = 'http://localhost:4000/items';
+  const API_URL = 'http://localhost:4000/items';
 
   const [items, setItems] = useState([]);
 
@@ -23,7 +24,7 @@ function App() {
   useEffect(() => {
     const fetchItem = async () => {
       try{
-        const response = await fetch(APP_URL);
+        const response = await fetch(API_URL);
 
         if(!response.ok) throw Error("Didn't Recieved expected Data!");
 
@@ -55,21 +56,48 @@ function App() {
     localStorage.setItem('list', JSON.stringify(listItems));
   };
 
-  const addItem = (item) => {
+  const addItem = async (item) => {
     const id = items.length ? (items[items.length - 1].id + 1) : 1;
     const myNewItem = { id, checked: false, item };
     const listItems = [...items, myNewItem];
     localWebStorage(listItems);
-  };
 
-  const handleChecked = (id) => {
+    const postOptions = {
+      method: "POST",
+      headers: {
+        "content-type": "application/json"
+      },
+      body: JSON.stringify(myNewItem)
+    }
+    const result = await apiRequest(API_URL, postOptions);
+    if (result) setFetchError(result);
+  }
+
+  const handleChecked = async (id) => {
     const listItems = items.map((item) => item.id === id ? {...item, checked: !item.checked} : item);
     localWebStorage(listItems);
+
+    const myItem = listItems.filter((item) => item.id === id);
+    
+    const updateOptions = {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ checked: myItem[0].checked })
+    };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, updateOptions);
+    if (result) setFetchError(result);
   };
 
-  const handleDelete = (id) => {
+  const handleDelete = async (id) => {
     const listItems = items.filter((item) => item.id !== id);
     localWebStorage(listItems);
+    const deleteOptions = { method: 'DELETE' };
+    const reqUrl = `${API_URL}/${id}`;
+    const result = await apiRequest(reqUrl, deleteOptions);
+    if (result) setFetchError(result);
   }
 
   const handleSubmit = (e) => {
